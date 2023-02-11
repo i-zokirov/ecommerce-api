@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 
 @Entity()
-export class Product {
+export default class Product {
     @PrimaryGeneratedColumn()
     id: number;
     @Column()
@@ -19,7 +19,8 @@ export class Product {
     description: string;
     @Column()
     price: number;
-
+    @Column({ default: 0 })
+    qty: number;
     @AfterInsert()
     logInsert() {
         console.log(`Inserted Product with an ID: ${this.id}`);
