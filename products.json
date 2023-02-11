@@ -1,0 +1,86 @@
+[
+    {
+        "name": "iPhone 13 Pro Max",
+        "description": "The iPhone 13 Pro Max is the latest and largest smartphone from Apple, featuring a stunning Super Retina XDR display, A15 Bionic chip, improved cameras, and longer battery life.",
+        "image": "https://www.apple.com/iphone-13-pro-max/design/",
+        "price": 1099
+    },
+    {
+        "name": "Samsung Galaxy S21 Ultra",
+        "description": "The Samsung Galaxy S21 Ultra is a high-end Android smartphone with a big and bright 6.8-inch AMOLED display, powerful Exynos 2100 or Snapdragon 888 processor, and versatile camera system with up to 100x zoom.",
+        "image": "https://www.samsung.com/global/galaxy/s21-ultra/",
+        "price": 1199
+    },
+    {
+        "name": "Microsoft Surface Pro 7+",
+        "description": "The Microsoft Surface Pro 7+ is a 2-in-1 laptop and tablet that runs Windows 10, features a 12.3-inch touch display, 11th Gen Intel Core processors, and optional 4G LTE connectivity.",
+        "image": "https://www.microsoft.com/en-us/surface/devices/surface-pro-7/",
+        "price": 899
+    },
+    {
+        "name": "Apple AirPods Pro",
+        "description": "The Apple AirPods Pro are premium wireless earbuds that offer active noise cancellation, transparent mode, and improved sound quality compared to the standard AirPods.",
+        "image": "https://www.apple.com/airpods-pro/",
+        "price": 249
+    },
+    {
+        "name": "DJI Mavic Air 2",
+        "description": "The DJI Mavic Air 2 is a compact and powerful drone that can capture 4K video and 48-megapixel photos with its Hasselblad camera, fly for up to 34 minutes, and reach speeds of up to 42.5 mph.",
+        "image": "https://www.dji.com/mavic-air-2",
+        "price": 799
+    },
+    {
+        "name": "Google Pixel 6 Pro",
+        "description": "The Google Pixel 6 Pro is a high-end Android smartphone with a 6.4-inch AMOLED display, powerful Google Tensor SoC, and innovative camera system with features such as Night Sight and Portrait Mode.",
+        "image": "https://store.google.com/product/pixel_6_pro",
+        "price": 999
+    },
+    {
+        "name": "Nintendo Switch Pro",
+        "description": "The Nintendo Switch Pro is a hybrid gaming console that can be played as a home console or handheld device, with a large and bright 7-inch OLED display, improved battery life, and Joy-Con controllers with motion controls.",
+        "image": "https://www.nintendo.com/switch/",
+        "price": 399
+    },
+    {
+        "name": "Google Nest Hub Max",
+        "description": "The Google Nest Hub Max is a smart display that combines a 10-inch touch screen, built-in Google Assistant, and a camera with features such as Face Match and Duo video calling.",
+        "image": "https://store.google.com/product/nest_hub_max",
+        "price": 229
+    },
+    {
+        "name": "Amazon Echo Show 10",
+        "description": "The Amazon Echo Show 10 is a smart display with a 10.1-inch touch screen, built-in Alexa, and a motorized base that automatically keeps the screen facing you as you move.",
+        "image": "https://www.amazon.com/dp/B08KL5BYN1",
+        "price": 249
+    },
+    {
+        "name": "Raspberry Pi 4 Model B",
+        "description": "The Raspberry Pi 4 Model B is a credit-card sized computer that can be used for a variety of purposes, such as building a media center, coding, or creating projects with the Internet of Things (IoT).",
+        "image": "https://www.raspberrypi.org/products/raspberry-pi-4-model-b/",
+        "price": 35
+    },
+    {
+        "name": "Tesla Model 3",
+        "description": "The Tesla Model 3 is a all-electric sedan that offers exceptional range, performance, and safety, as well as a minimalist and futuristic interior design.",
+        "image": "https://www.tesla.com/model3",
+        "price": 38000
+    },
+    {
+        "name": "Bose QuietComfort 35 II",
+        "description": "The Bose QuietComfort 35 II are wireless noise-cancelling headphones that provide excellent sound quality and comfortable fit, along with Alexa and Google Assistant voice control.",
+        "image": "https://www.bose.com/en_us/products/headphones/over_ear_headphones/quietcomfort-35-ii.html",
+        "price": 329
+    },
+    {
+        "name": "Sony WH-1000XM4",
+        "description": "The Sony WH-1000XM4 are premium wireless noise-cancelling headphones that offer best-in-class sound quality, noise cancellation, and comfortable fit, along with features such as Adaptive Sound Control and Speak-to-Chat.",
+        "image": "https://www.sony.com/electronics/over-ear-headphones/wh-1000xm4",
+        "price": 349
+    },
+    {
+        "name": "DJI Mini 2",
+        "description": "The DJI Mini 2 is a small and affordable drone that can capture 2.7K video and 12-megapixel photos with its 3-axis gimbal camera, fly for up to 31 minutes, and reach speeds of up to 42.7 mph.",
+        "image": "https://www.dji.com/mini-2",
+        "price": 449
+    }
+]

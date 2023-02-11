@@ -7,7 +7,11 @@ import {
     AfterUpdate,
     AfterRemove,
     ManyToOne,
+    OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn,
 } from "typeorm";
+import OrderItem from "./order-item.entity";
 
 export enum PaymentMethods {
     Online = "Online",
@@ -20,6 +24,8 @@ export default class Order {
     id: number;
     @ManyToOne(() => User, (user) => user.orders)
     user: User;
+    @OneToMany(() => OrderItem, (orderitem) => orderitem.id)
+    orders: OrderItem[];
     @Column({ default: PaymentMethods.Cash })
     paymentMethod: PaymentMethods;
     @Column({ default: 0 })
@@ -36,8 +42,6 @@ export default class Order {
     paidOn: Date;
     @Column()
     deliveredOn: Date;
-    @Column({ default: new Date() })
-    placedOn: Date;
     @Column()
     shipping_street: string;
     @Column()
@@ -46,6 +50,10 @@ export default class Order {
     shipping_postalCode: string;
     @Column()
     shipping_country: string;
+    @CreateDateColumn()
+    createdAt: string;
+    @UpdateDateColumn()
+    updtedAt: string;
 
     @AfterInsert()
     logInsert() {

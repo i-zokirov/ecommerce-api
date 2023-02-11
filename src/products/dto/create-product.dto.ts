@@ -7,7 +7,7 @@ export class CreateProductDto {
         type: String,
         description: "product title",
     })
-    title: string;
+    name: string;
 
     @IsUrl()
     @ApiProperty({
