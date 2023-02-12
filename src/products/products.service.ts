@@ -19,8 +19,12 @@ export class ProductsService {
         return this.repository.find();
     }
 
-    findOne(id: number) {
-        return this.repository.findOne({ where: { id } });
+    async findOne(id: number) {
+        const product = await this.repository.findOne({ where: { id } });
+        if (!product) {
+            throw new NotFoundException("Product not found");
+        }
+        return product;
     }
 
     async update(id: number, updateProductDto: UpdateProductDto) {
