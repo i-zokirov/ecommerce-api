@@ -8,6 +8,7 @@ import {
     Patch,
     Delete,
     Param,
+    UnauthorizedException,
 } from "@nestjs/common";
 import AdminGuard from "src/guards/admin.guard";
 import AuthGuard from "src/guards/auth.guard";
@@ -17,8 +18,10 @@ import { AuthenticateUserDto } from "./dto/authenticate-user.dto";
 import CreateUserDto from "./dto/create-user.dto";
 import UserPrivateDto from "./dto/private-user.dto";
 import UserPublicDto from "./dto/public-user.dto";
+import User from "./entities/user.entity";
 import { UsersService } from "./users.service";
-
+import CurrentUser from "./decorators/current-user.decorator";
+import UpdateUserDto from "./dto/update-user.dto";
 @Controller("users")
 export class UsersController {
     constructor(
@@ -75,5 +78,34 @@ export class UsersController {
     @Serialize(UserPrivateDto)
     getUserForAdmin(@Param("id") id: string) {
         return this.usersService.findById(parseInt(id));
+    }
+
+    @Patch("/:id")
+    @UseGuards(AuthGuard)
+    @Serialize(UserPublicDto)
+    updateUser(
+        @Param("id") id: string,
+        @CurrentUser() currentUser: User,
+        @Body() body: UpdateUserDto
+    ) {
+        if (currentUser && currentUser.id !== parseInt(id)) {
+            throw new UnauthorizedException("Not Authorized!");
+        }
+        return this.usersService.update(parseInt(id), body);
+    }
+
+    @Delete("/:id")
+    @UseGuards(AuthGuard)
+    @Serialize(UserPublicDto)
+    deleteUser(
+        @Param("id") id: string,
+        @CurrentUser() currentUser: User,
+        @Session() session: any
+    ) {
+        if (currentUser && currentUser.id !== parseInt(id)) {
+            throw new UnauthorizedException("Not Authorized!");
+        }
+        session.userId = null;
+        return this.usersService.remove(parseInt(id));
     }
 }
