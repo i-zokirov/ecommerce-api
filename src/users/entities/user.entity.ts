@@ -28,12 +28,12 @@ export default class User {
     firstname: string;
     @Column()
     lastname: string;
-    @Column()
+    @Column({ default: UserRole.User })
     role: string;
     @CreateDateColumn()
     createdAt: String;
     @UpdateDateColumn()
-    updtedAt: String;
+    updatedAt: String;
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
     @AfterInsert()

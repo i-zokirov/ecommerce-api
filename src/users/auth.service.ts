@@ -23,7 +23,10 @@ export class AuthService {
         const salt = randomBytes(8).toString("hex");
         const hash = (await scrypt(createUserDto.password, salt, 32)) as Buffer;
         const result = salt + "." + hash.toString("hex");
-        Object.assign(createUserDto, { password: result, role: UserRole.User });
+        Object.assign(createUserDto, {
+            password: result,
+            role: UserRole.Admin,
+        });
         return this.usersService.create(createUserDto);
     }
 
