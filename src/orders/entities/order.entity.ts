@@ -24,8 +24,8 @@ export default class Order {
     id: number;
     @ManyToOne(() => User, (user) => user.orders)
     user: User;
-    @OneToMany(() => OrderItem, (orderitem) => orderitem.id)
-    orders: OrderItem[];
+    @OneToMany(() => OrderItem, (orderitem) => orderitem.order)
+    order_items: OrderItem[];
     @Column({ default: PaymentMethods.Cash })
     paymentMethod: PaymentMethods;
     @Column({ default: 0 })
@@ -38,10 +38,10 @@ export default class Order {
     isPaid: boolean;
     @Column({ default: false })
     isDelivered: boolean;
-    @Column()
-    paidOn: Date;
-    @Column()
-    deliveredOn: Date;
+    // @Column({ nullable: true, default: null })
+    // paidOn: Date | null;
+    // @Column({ nullable: true, default: null })
+    // deliveredOn: Date | null;
     @Column()
     shipping_street: string;
     @Column()
@@ -51,9 +51,9 @@ export default class Order {
     @Column()
     shipping_country: string;
     @CreateDateColumn()
-    createdAt: string;
+    createdAt: Date;
     @UpdateDateColumn()
-    updtedAt: string;
+    updtedAt: Date;
 
     @AfterInsert()
     logInsert() {
