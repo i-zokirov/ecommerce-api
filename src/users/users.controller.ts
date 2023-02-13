@@ -10,8 +10,9 @@ import {
     Param,
     UnauthorizedException,
 } from "@nestjs/common";
-import AdminGuard from "src/guards/admin.guard";
-import AuthGuard from "src/guards/auth.guard";
+import { ApiOperation, ApiParam } from "@nestjs/swagger";
+import AdminGuard from "../guards/admin.guard";
+import AuthGuard from "../guards/auth.guard";
 import Serialize from "../interceptors/serialize.interceptor";
 import { AuthService } from "./auth.service";
 import { AuthenticateUserDto } from "./dto/authenticate-user.dto";
@@ -22,6 +23,7 @@ import User from "./entities/user.entity";
 import { UsersService } from "./users.service";
 import CurrentUser from "./decorators/current-user.decorator";
 import UpdateUserDto from "./dto/update-user.dto";
+
 @Controller("users")
 export class UsersController {
     constructor(
@@ -30,6 +32,9 @@ export class UsersController {
     ) {}
 
     @Post("/auth/signup")
+    @ApiOperation({
+        summary: "User Registration route",
+    })
     @Serialize(UserPublicDto)
     async signup(
         @Body() createUserDto: CreateUserDto,
@@ -40,6 +45,7 @@ export class UsersController {
         return user;
     }
     @Post("/auth/signin")
+    @ApiOperation({ summary: "User login route" })
     @Serialize(UserPublicDto)
     async signin(@Body() body: AuthenticateUserDto, @Session() session: any) {
         const user = await this.authService.signin(body);
@@ -48,19 +54,14 @@ export class UsersController {
     }
 
     @Post("/auth/signout")
+    @ApiOperation({ summary: "User logout route" })
     signout(@Session() session: any) {
         session.userId = null;
     }
 
-    @Get("/")
-    @UseGuards(AdminGuard)
-    @Serialize(UserPublicDto)
-    listAllUsers() {
-        return this.usersService.list();
-    }
-
     @Get("/admin")
     @UseGuards(AdminGuard)
+    @ApiOperation({ summary: "Lists all users for Admin" })
     @Serialize(UserPrivateDto)
     listAllUsersAdmin() {
         return this.usersService.list();
@@ -68,6 +69,11 @@ export class UsersController {
 
     @Get("/:id")
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary:
+            "Fetches user profile by id if it belongs to the currently authenticated user",
+    })
+    @ApiParam({ name: "id", type: "number" })
     @Serialize(UserPublicDto)
     getUser(@Param("id") id: string) {
         return this.usersService.findById(parseInt(id));
@@ -75,6 +81,8 @@ export class UsersController {
 
     @Get("/:id/admin")
     @UseGuards(AuthGuard)
+    @ApiOperation({ summary: "Fetches user profile by id for admin" })
+    @ApiParam({ name: "id", type: "number" })
     @Serialize(UserPrivateDto)
     getUserForAdmin(@Param("id") id: string) {
         return this.usersService.findById(parseInt(id));
@@ -82,6 +90,11 @@ export class UsersController {
 
     @Patch("/:id")
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary:
+            "Updates user profile by id if it belongs to the currently authenticated user",
+    })
+    @ApiParam({ name: "id", type: "number" })
     @Serialize(UserPublicDto)
     updateUser(
         @Param("id") id: string,
@@ -96,6 +109,11 @@ export class UsersController {
 
     @Delete("/:id")
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary:
+            "Deletes user profile by id if it belongs to the currently authenticated user",
+    })
+    @ApiParam({ name: "id", type: "number" })
     @Serialize(UserPublicDto)
     deleteUser(
         @Param("id") id: string,

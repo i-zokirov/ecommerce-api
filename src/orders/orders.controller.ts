@@ -5,12 +5,12 @@ import {
     Body,
     Patch,
     Param,
-    Delete,
     UseGuards,
     NotFoundException,
     BadRequestException,
     UnauthorizedException,
 } from "@nestjs/common";
+import { ApiOperation, ApiParam } from "@nestjs/swagger";
 import { OrdersService } from "./orders.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
@@ -21,8 +21,8 @@ import { ProductsService } from "../products/products.service";
 import OrderItemService from "./order-item.service";
 import Order, { OrderStatus } from "./entities/order.entity";
 import OrderDto from "./dto/order.dto";
-import Serialize from "src/interceptors/serialize.interceptor";
-import AdminGuard from "src/guards/admin.guard";
+import Serialize from "../interceptors/serialize.interceptor";
+import AdminGuard from "../guards/admin.guard";
 
 @Controller("orders")
 @Serialize(OrderDto)
@@ -35,6 +35,9 @@ export class OrdersController {
 
     @Post()
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary: "Route for created an order for authenticated user.",
+    })
     async create(
         @Body() createOrderDto: CreateOrderDto,
         @CurrentUser() user: User
@@ -86,19 +89,30 @@ export class OrdersController {
     }
 
     @Get("/")
-    @UseGuards(AdminGuard)
+    @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary: "Route for fetching all orders of the authenticated user.",
+    })
     findUserOrders(@CurrentUser() user: User) {
         return this.ordersService.findUserOrders(user.id);
     }
 
     @Get("/admin")
     @UseGuards(AdminGuard)
+    @ApiOperation({
+        summary: "Route for fetching all orders for the admin.",
+    })
     findAll() {
         return this.ordersService.findAll();
     }
 
     @Get(":id")
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary:
+            "Route for fetching an order by :id param if the order belongs to the authenticated user.",
+    })
+    @ApiParam({ name: "id", type: "number" })
     async findOne(@Param("id") id: string, @CurrentUser() user: User) {
         const order = await this.ordersService.findOne(+id);
         if (!order) {
@@ -114,12 +128,21 @@ export class OrdersController {
 
     @Get("/:id/admin")
     @UseGuards(AdminGuard)
+    @ApiOperation({
+        summary: "Route for fetching an order by :id param for the admin user.",
+    })
+    @ApiParam({ name: "id", type: "number" })
     findOneForAdmin(@Param("id") id: string) {
         return this.ordersService.findOne(+id);
     }
 
     @Patch("/:id")
     @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary:
+            "Route for updating an order by :id param if the order belongs to the authenticated user.",
+    })
+    @ApiParam({ name: "id", type: "number" })
     async update(
         @Param("id") id: string,
         @Body() updateOrderDto: UpdateOrderDto,
@@ -143,6 +166,10 @@ export class OrdersController {
 
     @Patch("/:id/admin")
     @UseGuards(AdminGuard)
+    @ApiOperation({
+        summary: "Route for updating an order by :id param for the admin user.",
+    })
+    @ApiParam({ name: "id", type: "number" })
     async updateByAdmin(
         @Param("id") id: string,
         @Body() updateOrderDto: UpdateOrderDto
@@ -156,19 +183,5 @@ export class OrdersController {
             updates.cancelledBy = UserRole.Admin;
         }
         return this.ordersService.update(+id, updates);
-    }
-
-    @Delete(":id")
-    @UseGuards(AuthGuard)
-    async remove(@Param("id") id: string, @CurrentUser() user: User) {
-        const order = await this.ordersService.findOne(+id);
-        if (!order) {
-            throw new NotFoundException("Order not found!");
-        }
-
-        if (order.user.id !== user.id) {
-            throw new UnauthorizedException("Not authorized!");
-        }
-        return this.ordersService.remove(order);
     }
 }

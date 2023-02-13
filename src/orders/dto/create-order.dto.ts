@@ -5,28 +5,53 @@ import IsShippingAddress from "../validators/IsShippingAddress";
 
 class ShippingAddress {
     @IsString()
+    @ApiProperty({
+        type: String,
+        example: "Somewhere St",
+    })
     street: string;
     @IsString()
+    @ApiProperty({
+        type: String,
+        example: "Some city",
+    })
     city: string;
     @IsString()
+    @ApiProperty({
+        type: String,
+        example: "12345a",
+    })
     postalCode: string;
     @IsString()
+    @ApiProperty({
+        type: String,
+        example: "Lalaland",
+    })
     country: string;
 }
 
 class OrderItem {
     @IsNumber()
+    @ApiProperty({
+        type: Number,
+        example: 1,
+    })
     productId: number;
     @IsNumber()
     @Min(1)
+    @ApiProperty({
+        type: Number,
+        example: 1,
+    })
     qty: number;
 }
 
 export class CreateOrderDto {
     @IsString()
     @ApiProperty({
-        type: String,
+        enum: PaymentMethods,
         description: "Payment method: Online | CashOnDelivery",
+        example: PaymentMethods.Online,
     })
     paymentMethod: PaymentMethods;
 
@@ -38,6 +63,6 @@ export class CreateOrderDto {
     shippingAddress: ShippingAddress;
 
     @IsArray()
-    @ApiProperty({ type: Array, description: "Array of product ids" })
+    @ApiProperty({ type: [OrderItem] })
     orderitems: OrderItem[];
 }

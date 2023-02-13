@@ -6,6 +6,7 @@ export class CreateProductDto {
     @ApiProperty({
         type: String,
         description: "product title",
+        example: "iPhone 13 Pro Max",
     })
     name: string;
 
@@ -13,6 +14,7 @@ export class CreateProductDto {
     @ApiProperty({
         type: String,
         description: "product image url",
+        example: "https://www.apple.com/iphone-13-pro-max/design/",
     })
     image: string;
 
@@ -20,6 +22,8 @@ export class CreateProductDto {
     @ApiProperty({
         type: String,
         description: "product description",
+        example:
+            "The iPhone 13 Pro Max is the latest and largest smartphone from Apple, featuring a stunning Super Retina XDR display, A15 Bionic chip, improved cameras, and longer battery life.",
     })
     description: string;
 
@@ -27,8 +31,9 @@ export class CreateProductDto {
     @Min(0)
     @Max(1000000)
     @ApiProperty({
-        type: String,
+        type: Number,
         description: "product price. Min value 0. Max Value 1000000",
+        example: 1099,
     })
     price: number;
 
@@ -36,8 +41,9 @@ export class CreateProductDto {
     @Min(0)
     @Max(1000000)
     @ApiProperty({
-        type: String,
+        type: Number,
         description: "product quantity. Min value 0. Max Value 1000000",
+        example: 24,
     })
     qty: number;
 }
