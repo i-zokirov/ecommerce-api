@@ -37,4 +37,5 @@ lerna-debug.log*
 
 data.js
 *.sqlite
+db.sqlite
 products.json

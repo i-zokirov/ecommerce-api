@@ -11,13 +11,12 @@ const customOptions: SwaggerCustomOptions = {
 };
 const config = new DocumentBuilder()
     .setTitle("eCommerce")
-    .setDescription("eCommerce API")
+    .setDescription("eCommerce app backend API built with NestJS")
     .setVersion("1.0")
     .addTag("eCommerce")
     .build();
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("api", app, document, customOptions);
     await app.listen(3000);
