@@ -7,11 +7,12 @@ import { AppService } from "./app.service";
 import { ProductsModule } from "./products/products.module";
 import { OrdersModule } from "./orders/orders.module";
 import { UsersModule } from "./users/users.module";
-import { ReviewsModule } from './reviews/reviews.module';
+import { ReviewsModule } from "./reviews/reviews.module";
 import Product from "./products/entities/product.entity";
 import User from "./users/entities/user.entity";
 import Order from "./orders/entities/order.entity";
 import OrderItem from "./orders/entities/order-item.entity";
+import Review from "./reviews/entities/review.entity";
 const cookieSession = require("cookie-session");
 
 @Module({
@@ -23,7 +24,7 @@ const cookieSession = require("cookie-session");
         TypeOrmModule.forRoot({
             type: "sqlite",
             database: "db.sqlite",
-            entities: [Product, User, Order, OrderItem],
+            entities: [Product, User, Order, OrderItem, Review],
             synchronize: true,
         }),
         ProductsModule,

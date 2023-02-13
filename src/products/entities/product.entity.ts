@@ -7,12 +7,16 @@ import {
     AfterRemove,
     UpdateDateColumn,
     CreateDateColumn,
+    OneToMany,
 } from "typeorm";
+import Review from "../../reviews/entities/review.entity";
 
 @Entity()
 export default class Product {
     @PrimaryGeneratedColumn()
     id: number;
+    @OneToMany(() => Review, (review) => review.product)
+    reviews: Review[];
     @Column()
     name: string;
     @Column()
@@ -24,9 +28,9 @@ export default class Product {
     @Column({ default: 0 })
     qty: number;
     @CreateDateColumn()
-    createdAt: String;
+    createdAt: Date;
     @UpdateDateColumn()
-    updtedAt: String;
+    updatedAt: Date;
     @AfterInsert()
     logInsert() {
         console.log(`Inserted Product with an ID: ${this.id}`);

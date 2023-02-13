@@ -1,4 +1,23 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateReviewDto } from './create-review.dto';
+import { IsString, IsNumber, Min, Max, IsOptional } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+export class UpdateReviewDto {
+    @IsNumber()
+    @IsOptional()
+    @Min(1)
+    @Max(5)
+    @ApiProperty({
+        type: Number,
+        description: "product rating",
+        example: 5,
+    })
+    rating: number;
 
-export class UpdateReviewDto extends PartialType(CreateReviewDto) {}
+    @IsString()
+    @IsOptional()
+    @ApiPropertyOptional({
+        type: String,
+        description: "review comment",
+        example: "This is amazing",
+    })
+    comment: string;
+}

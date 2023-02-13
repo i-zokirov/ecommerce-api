@@ -1,4 +1,3 @@
-import User, { UserRole } from "../../users/entities/user.entity";
 import {
     PrimaryGeneratedColumn,
     Column,
@@ -12,6 +11,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import OrderItem from "./order-item.entity";
+import User from "../../users/entities/user.entity";
 
 export enum PaymentMethods {
     Online = "Online",
@@ -63,7 +63,7 @@ export default class Order {
     @CreateDateColumn()
     createdAt: Date;
     @UpdateDateColumn()
-    updtedAt: Date;
+    updatedAt: Date;
 
     @AfterInsert()
     logInsert() {

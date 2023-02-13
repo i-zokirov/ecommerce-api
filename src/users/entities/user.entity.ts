@@ -1,4 +1,3 @@
-import Order from "src/orders/entities/order.entity";
 import {
     PrimaryGeneratedColumn,
     Column,
@@ -10,6 +9,8 @@ import {
     CreateDateColumn,
     OneToMany,
 } from "typeorm";
+import Order from "../../orders/entities/order.entity";
+import Review from "../../reviews/entities/review.entity";
 
 export enum UserRole {
     Admin = "Admin",
@@ -31,11 +32,13 @@ export default class User {
     @Column({ default: UserRole.User })
     role: string;
     @CreateDateColumn()
-    createdAt: String;
+    createdAt: Date;
     @UpdateDateColumn()
-    updatedAt: String;
+    updatedAt: Date;
     @OneToMany(() => Order, (order) => order.user)
     orders: Order[];
+    @OneToMany(() => Review, (review) => review.user)
+    reviews: Review[];
     @AfterInsert()
     logInsert() {
         console.log(`Inserted User with an ID: ${this.id}`);
