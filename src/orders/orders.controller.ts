@@ -9,18 +9,23 @@ import {
     UseGuards,
     NotFoundException,
     BadRequestException,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { OrdersService } from "./orders.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import AuthGuard from "../guards/auth.guard";
 import CurrentUser from "../users/decorators/current-user.decorator";
-import User from "../users/entities/user.entity";
+import User, { UserRole } from "../users/entities/user.entity";
 import { ProductsService } from "../products/products.service";
 import OrderItemService from "./order-item.service";
-import Order from "./entities/order.entity";
+import Order, { OrderStatus } from "./entities/order.entity";
+import OrderDto from "./dto/order.dto";
+import Serialize from "src/interceptors/serialize.interceptor";
+import AdminGuard from "src/guards/admin.guard";
 
 @Controller("orders")
+@Serialize(OrderDto)
 export class OrdersController {
     constructor(
         private readonly ordersService: OrdersService,
@@ -30,7 +35,6 @@ export class OrdersController {
 
     @Post()
     @UseGuards(AuthGuard)
-    // @Serialize(UserPublicDto)
     async create(
         @Body() createOrderDto: CreateOrderDto,
         @CurrentUser() user: User
@@ -81,23 +85,90 @@ export class OrdersController {
         return this.ordersService.create(order);
     }
 
-    @Get()
+    @Get("/")
+    @UseGuards(AdminGuard)
+    findUserOrders(@CurrentUser() user: User) {
+        return this.ordersService.findUserOrders(user.id);
+    }
+
+    @Get("/admin")
+    @UseGuards(AdminGuard)
     findAll() {
         return this.ordersService.findAll();
     }
 
     @Get(":id")
-    findOne(@Param("id") id: string) {
+    @UseGuards(AuthGuard)
+    async findOne(@Param("id") id: string, @CurrentUser() user: User) {
+        const order = await this.ordersService.findOne(+id);
+        if (!order) {
+            throw new NotFoundException("Order not found!");
+        }
+
+        if (order.user.id !== user.id) {
+            throw new UnauthorizedException("Not authorized!");
+        }
+
+        return order;
+    }
+
+    @Get("/:id/admin")
+    @UseGuards(AdminGuard)
+    findOneForAdmin(@Param("id") id: string) {
         return this.ordersService.findOne(+id);
     }
 
-    @Patch(":id")
-    update(@Param("id") id: string, @Body() updateOrderDto: UpdateOrderDto) {
-        return this.ordersService.update(+id, updateOrderDto);
+    @Patch("/:id")
+    @UseGuards(AuthGuard)
+    async update(
+        @Param("id") id: string,
+        @Body() updateOrderDto: UpdateOrderDto,
+        @CurrentUser() user: User
+    ) {
+        const order = await this.ordersService.findOne(+id);
+        if (!order) {
+            throw new NotFoundException("Order not found!");
+        }
+
+        if (order.user.id !== user.id) {
+            throw new UnauthorizedException("Not authorized!");
+        }
+
+        const updates: Partial<Order> = { ...updateOrderDto };
+        if (updates.status === OrderStatus.Cancelled) {
+            updates.cancelledBy = UserRole.User;
+        }
+        return this.ordersService.update(+id, updates);
+    }
+
+    @Patch("/:id/admin")
+    @UseGuards(AdminGuard)
+    async updateByAdmin(
+        @Param("id") id: string,
+        @Body() updateOrderDto: UpdateOrderDto
+    ) {
+        const order = await this.ordersService.findOne(+id);
+        if (!order) {
+            throw new NotFoundException("Order not found!");
+        }
+        const updates: Partial<Order> = { ...updateOrderDto };
+        if (updates.status === OrderStatus.Cancelled) {
+            updates.cancelledBy = UserRole.Admin;
+        }
+        return this.ordersService.update(+id, updates);
     }
 
     @Delete(":id")
-    remove(@Param("id") id: string) {
-        return this.ordersService.remove(+id);
+    @UseGuards(AuthGuard)
+    async remove(@Param("id") id: string, @CurrentUser() user: User) {
+        const order = await this.ordersService.findOne(+id);
+        if (!order) {
+            throw new NotFoundException("Order not found!");
+        }
+
+        if (order.user.id !== user.id) {
+            throw new UnauthorizedException("Not authorized!");
+        }
+        return this.ordersService.remove(order);
     }
 }

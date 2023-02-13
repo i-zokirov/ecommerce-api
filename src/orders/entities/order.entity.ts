@@ -1,4 +1,4 @@
-import User from "../../users/entities/user.entity";
+import User, { UserRole } from "../../users/entities/user.entity";
 import {
     PrimaryGeneratedColumn,
     Column,
@@ -18,11 +18,17 @@ export enum PaymentMethods {
     Cash = "CashOnDelivery",
 }
 
+export enum OrderStatus {
+    Placed = "Placed",
+    Delivered = "Delivered",
+    Cancelled = "Cancelled",
+}
+
 @Entity()
 export default class Order {
     @PrimaryGeneratedColumn()
     id: number;
-    @ManyToOne(() => User, (user) => user.orders)
+    @ManyToOne(() => User, (user) => user.orders, { onDelete: "CASCADE" })
     user: User;
     @OneToMany(() => OrderItem, (orderitem) => orderitem.order)
     order_items: OrderItem[];
@@ -38,10 +44,10 @@ export default class Order {
     isPaid: boolean;
     @Column({ default: false })
     isDelivered: boolean;
-    // @Column({ nullable: true, default: null })
-    // paidOn: Date | null;
-    // @Column({ nullable: true, default: null })
-    // deliveredOn: Date | null;
+    @Column({ nullable: true, default: null })
+    paidOn: Date | null;
+    @Column({ nullable: true, default: null })
+    deliveredOn: Date | null;
     @Column()
     shipping_street: string;
     @Column()
@@ -50,6 +56,10 @@ export default class Order {
     shipping_postalCode: string;
     @Column()
     shipping_country: string;
+    @Column({ default: OrderStatus.Placed })
+    status: string;
+    @Column({ nullable: true, default: null })
+    cancelledBy: string;
     @CreateDateColumn()
     createdAt: Date;
     @UpdateDateColumn()
