@@ -14,19 +14,26 @@ export class ReviewsService {
         return this.repostory.save(created);
     }
 
-    findAll() {
-        return `This action returns all reviews`;
+    findAll(productId: number) {
+        return this.repostory.find({
+            where: { product: { id: productId } },
+            relations: { product: true, user: true },
+        });
     }
 
     findOne(id: number) {
-        return `This action returns a #${id} review`;
+        return this.repostory.findOne({
+            where: { id },
+            relations: { product: true, user: true },
+        });
     }
 
-    update(id: number, updateReviewDto: UpdateReviewDto) {
-        return `This action updates a #${id} review`;
+    update(review: Review, updateReviewDto: UpdateReviewDto) {
+        Object.assign(review, updateReviewDto);
+        return this.repostory.save(review);
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} review`;
+    remove(review: Review) {
+        return this.repostory.remove(review);
     }
 }

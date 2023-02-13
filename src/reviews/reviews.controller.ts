@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
     NotFoundException,
+    UnauthorizedException,
     UseGuards,
 } from "@nestjs/common";
 import { ApiOperation, ApiParam } from "@nestjs/swagger";
@@ -57,8 +58,8 @@ export class ReviewsController {
         name: "productId",
         type: "number",
     })
-    findAll() {
-        return this.reviewsService.findAll();
+    findAll(@Param("productId") productId: string) {
+        return this.reviewsService.findAll(+productId);
     }
 
     @Get("/:reviewId")
@@ -69,11 +70,16 @@ export class ReviewsController {
         name: "reviewId",
         type: "number",
     })
-    findOne(@Param("reviewId") reviewId: string) {
-        return this.reviewsService.findOne(+reviewId);
+    async findOne(@Param("reviewId") reviewId: string) {
+        const review = await this.reviewsService.findOne(+reviewId);
+        if (!review) {
+            throw new NotFoundException("Review not found");
+        }
+        return review;
     }
 
     @Patch("/:reviewId")
+    @UseGuards(AuthGuard)
     @ApiOperation({
         summary: "Route for updating a single review by id",
     })
@@ -81,14 +87,23 @@ export class ReviewsController {
         name: "reviewId",
         type: "number",
     })
-    update(
+    async update(
         @Param("reviewId") reviewId: string,
-        @Body() updateReviewDto: UpdateReviewDto
+        @Body() updateReviewDto: UpdateReviewDto,
+        @CurrentUser() user: User
     ) {
-        return this.reviewsService.update(+reviewId, updateReviewDto);
+        const review = await this.reviewsService.findOne(+reviewId);
+        if (!review) {
+            throw new NotFoundException("Review not found");
+        }
+        if (review.user.id !== user.id) {
+            throw new UnauthorizedException("Not authorized!");
+        }
+        return this.reviewsService.update(review, updateReviewDto);
     }
 
     @Delete("/:reviewId")
+    @UseGuards(AuthGuard)
     @ApiOperation({
         summary: "Route for deleting a single review by id",
     })
@@ -96,7 +111,17 @@ export class ReviewsController {
         name: "reviewId",
         type: "number",
     })
-    remove(@Param("reviewId") reviewId: string) {
-        return this.reviewsService.remove(+reviewId);
+    async remove(
+        @Param("reviewId") reviewId: string,
+        @CurrentUser() user: User
+    ) {
+        const review = await this.reviewsService.findOne(+reviewId);
+        if (!review) {
+            throw new NotFoundException("Review not found");
+        }
+        if (review.user.id !== user.id) {
+            throw new UnauthorizedException("Not authorized!");
+        }
+        return this.reviewsService.remove(review);
     }
 }
