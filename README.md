@@ -2,6 +2,10 @@
 
 eCommerce app backend API built with NestJS
 
+## Authors
+
+-   [@i-zokirov](https://github.com/i-zokirov)
+
 ## Installation
 
 ```bash
