@@ -7,6 +7,7 @@ import { AppService } from "./app.service";
 import { ProductsModule } from "./products/products.module";
 import { OrdersModule } from "./orders/orders.module";
 import { UsersModule } from "./users/users.module";
+import { ReviewsModule } from './reviews/reviews.module';
 import Product from "./products/entities/product.entity";
 import User from "./users/entities/user.entity";
 import Order from "./orders/entities/order.entity";
@@ -28,6 +29,7 @@ const cookieSession = require("cookie-session");
         ProductsModule,
         OrdersModule,
         UsersModule,
+        ReviewsModule,
     ],
     controllers: [AppController],
     providers: [
