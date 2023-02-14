@@ -39,3 +39,8 @@ data.js
 *.sqlite
 db.sqlite
 products.json
+
+.env*
+.env.dev
+src/migrations
+src/db

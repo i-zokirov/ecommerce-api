@@ -8,11 +8,8 @@ import { ProductsModule } from "./products/products.module";
 import { OrdersModule } from "./orders/orders.module";
 import { UsersModule } from "./users/users.module";
 import { ReviewsModule } from "./reviews/reviews.module";
-import Product from "./products/entities/product.entity";
-import User from "./users/entities/user.entity";
-import Order from "./orders/entities/order.entity";
-import OrderItem from "./orders/entities/order-item.entity";
-import Review from "./reviews/entities/review.entity";
+import { TypeOrmConfigService } from "./config/typeorm.config";
+
 const cookieSession = require("cookie-session");
 
 @Module({
@@ -21,12 +18,7 @@ const cookieSession = require("cookie-session");
             isGlobal: true,
             envFilePath: `.env.${process.env.NODE_ENV}`,
         }),
-        TypeOrmModule.forRoot({
-            type: "sqlite",
-            database: "db.sqlite",
-            entities: [Product, User, Order, OrderItem, Review],
-            synchronize: true,
-        }),
+        TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
         ProductsModule,
         OrdersModule,
         UsersModule,
